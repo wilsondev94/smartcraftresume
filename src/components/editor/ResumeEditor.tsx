@@ -7,11 +7,14 @@ import Breadcrumbs from "./Breadcrumbs";
 import Footer from "./Footer";
 import { steps } from "./steps";
 import ResumePreviewSection from "./ResumePreviewSection";
+import { cn } from "@/lib/utils";
 
 export default function ResumeEditor() {
   const searchPrarams = useSearchParams();
 
   const [resumeData, setResumeData] = useState<ResumeDataValidationSchema>({});
+
+  const [showResumePreview, setShowResumePreview] = useState(false);
 
   function setCurrentStep(key: string) {
     const newSearchParams = new URLSearchParams(searchPrarams);
@@ -36,7 +39,12 @@ export default function ResumeEditor() {
       </header>
       <main className="relative grow">
         <div className="absolute bottom-0 top-0 flex w-full">
-          <div className="w-full md:w-1/2 p-3 overflow-y-auto space-y-6">
+          <div
+            className={cn(
+              "w-full md:w-1/2 md:block p-3 overflow-y-auto space-y-6",
+              showResumePreview && "hidden"
+            )}
+          >
             <Breadcrumbs
               currentStep={currentStep}
               setCurrentStep={setCurrentStep}
@@ -54,10 +62,16 @@ export default function ResumeEditor() {
           <ResumePreviewSection
             resumeData={resumeData}
             setResumeData={setResumeData}
+            className={cn(showResumePreview && "flex")}
           />
         </div>
       </main>
-      <Footer currentStep={currentStep} setCurrentStep={setCurrentStep} />
+      <Footer
+        currentStep={currentStep}
+        setCurrentStep={setCurrentStep}
+        showResumePreview={showResumePreview}
+        setShowResumePreview={setShowResumePreview}
+      />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useDimensions } from "@/hooks/useDimensions";
 import { ResumeDataValidationSchema } from "@/lib/validationSchema";
 import { Badge } from "../ui/badge";
+import { borderStyles } from "../editor/BorderStyleBtn";
 
 interface ResumepreviewProps {
   resumeData: ResumeDataValidationSchema;
@@ -83,15 +84,28 @@ export function PersonalInfoItems({ resumeData }: ResumepreviewItemsProps) {
           height={100}
           alt="photo"
           className="aspect-square object-cover"
+          style={{
+            borderRadius:
+              borderStyle === borderStyles.SQUARE
+                ? "0px"
+                : borderStyle === borderStyles.CIRCLE
+                  ? "9999px"
+                  : "10%",
+          }}
         />
       )}
 
       <div className="space-y-2.5">
         <div className="space-y-1">
-          <p className="text-3xl font-bold">
+          <p
+            className="text-3xl font-bold"
+            style={{
+              color: colorHex,
+            }}
+          >
             {firstName} {lastName}
           </p>
-          <p className="font-medium">{jobTitle}</p>
+          <p>{jobTitle}</p>
         </div>
         <p className="text-xs text-gray-500">
           {city}
@@ -106,15 +120,27 @@ export function PersonalInfoItems({ resumeData }: ResumepreviewItemsProps) {
 }
 
 export function SummaryItem({ resumeData }: ResumepreviewItemsProps) {
-  const { summary } = resumeData;
+  const { summary, colorHex } = resumeData;
 
   if (!summary) return null;
 
   return (
     <>
-      <hr className="border-2" />
+      <hr
+        className="border-2"
+        style={{
+          borderColor: colorHex,
+        }}
+      />
       <div className="space-y-3 break-inside-avoid">
-        <p className="text-lg font-semibold ">Professional Summary</p>
+        <p
+          className="text-lg font-semibold"
+          style={{
+            color: colorHex,
+          }}
+        >
+          Summary
+        </p>
         <div className="whitespace-pre-line text-sm">{summary}</div>
       </div>
     </>
@@ -122,7 +148,7 @@ export function SummaryItem({ resumeData }: ResumepreviewItemsProps) {
 }
 
 export function WorkExperienceItem({ resumeData }: ResumepreviewItemsProps) {
-  const { workExperiences } = resumeData;
+  const { workExperiences, colorHex } = resumeData;
 
   const workExpNotEmpty = workExperiences?.filter(
     (exp) => Object.values(exp).filter(Boolean).length > 0
@@ -132,9 +158,19 @@ export function WorkExperienceItem({ resumeData }: ResumepreviewItemsProps) {
 
   return (
     <>
-      <hr className="border-2" />
+      <hr
+        className="border-2"
+        style={{
+          borderColor: colorHex,
+        }}
+      />
       <div className="space-y-3">
-        <p className="text-lg font-semibold break-inside-avoid">
+        <p
+          className="text-lg font-semibold break-inside-avoid"
+          style={{
+            color: colorHex,
+          }}
+        >
           Work Expperience
         </p>
         {workExpNotEmpty.map((exp, index) => (
@@ -160,20 +196,31 @@ export function WorkExperienceItem({ resumeData }: ResumepreviewItemsProps) {
 }
 
 export function EducationItems({ resumeData }: ResumepreviewItemsProps) {
-  const { educations } = resumeData;
+  const { educations, colorHex } = resumeData;
 
   const educationNotEmpty = educations?.filter(
     (exp) => Object.values(exp).filter(Boolean).length > 0
   );
-  console.log(educationNotEmpty);
 
   if (!educationNotEmpty?.length) return null;
 
   return (
     <>
-      <hr className="border-2" />
+      <hr
+        className="border-2"
+        style={{
+          borderColor: colorHex,
+        }}
+      />
       <div className="space-y-3">
-        <p className="text-lg font-semibold break-inside-avoid">Education</p>
+        <p
+          className="text-lg font-semibold break-inside-avoid"
+          style={{
+            color: colorHex,
+          }}
+        >
+          Education
+        </p>
         {educationNotEmpty.map((edu, index) => (
           <div key={index} className="space-y-1 break-inside-avoid">
             <div className="flex items-center justify-between text-sm font-semibold">
@@ -194,15 +241,27 @@ export function EducationItems({ resumeData }: ResumepreviewItemsProps) {
 }
 
 export function SkillsItem({ resumeData }: ResumepreviewItemsProps) {
-  const { skills } = resumeData;
+  const { skills, colorHex } = resumeData;
 
   if (!skills?.length) return null;
 
   return (
     <>
-      <hr className="border-2" />
+      <hr
+        className="border-2"
+        style={{
+          borderColor: colorHex,
+        }}
+      />
       <div className="space-y-3 break-inside-avoid">
-        <p className="text-lg font-semibold ">Skills</p>
+        <p
+          className="text-lg font-semibold "
+          style={{
+            color: colorHex,
+          }}
+        >
+          Skills
+        </p>
         <div className="flex flex-wrap gap-1 whitespace-pre-line text-sm">
           {skills.map((skill, index) => (
             <Badge

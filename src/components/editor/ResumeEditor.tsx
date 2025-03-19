@@ -1,13 +1,15 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { ResumeDataValidationSchema } from "@/lib/validationSchema";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import Breadcrumbs from "./Breadcrumbs";
 import Footer from "./Footer";
-import { steps } from "./steps";
 import ResumePreviewSection from "./ResumePreviewSection";
-import { cn } from "@/lib/utils";
+import { steps } from "./steps";
+import useAutoSave from "@/hooks/useAutoSave";
+import useUnloadWarning from "@/hooks/useUnloadWarning";
 
 export default function ResumeEditor() {
   const searchPrarams = useSearchParams();
@@ -15,6 +17,9 @@ export default function ResumeEditor() {
   const [resumeData, setResumeData] = useState<ResumeDataValidationSchema>({});
 
   const [showResumePreview, setShowResumePreview] = useState(false);
+
+  const { isSaving, hasUnSavedChanges } = useAutoSave(resumeData);
+  useUnloadWarning(hasUnSavedChanges);
 
   function setCurrentStep(key: string) {
     const newSearchParams = new URLSearchParams(searchPrarams);
@@ -71,6 +76,7 @@ export default function ResumeEditor() {
         setCurrentStep={setCurrentStep}
         showResumePreview={showResumePreview}
         setShowResumePreview={setShowResumePreview}
+        isSaving={isSaving}
       />
     </div>
   );

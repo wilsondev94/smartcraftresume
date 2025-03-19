@@ -1,11 +1,27 @@
-import { EditorFormProps } from "@/lib/types";
-import {
-  workExperienceSchema,
-  WorkExperienceValues,
-} from "@/lib/validationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useFieldArray, useForm, UseFormReturn } from "react-hook-form";
+import { GripHorizontal } from "lucide-react";
+
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { CSS } from "@dnd-kit/utilities";
+
 import {
   Form,
   FormControl,
@@ -15,9 +31,15 @@ import {
   FormLabel,
 } from "../ui/form";
 import { Button } from "../ui/button";
-import { GripHorizontal } from "lucide-react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+
+import { EditorFormProps } from "@/lib/types";
+import {
+  workExperienceSchema,
+  WorkExperienceValues,
+} from "@/lib/validationSchema";
+import { cn } from "@/lib/utils";
 
 export default function WorkExperienceForm({
   resumeData,
@@ -45,10 +67,31 @@ export default function WorkExperienceForm({
     return unsubscribe;
   }, [form, setResumeData, resumeData]);
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control: form.control,
     name: "workExperiences",
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = fields.findIndex((field) => field.id === active.id);
+
+      const newIndex = fields.findIndex((field) => field.id === over.id);
+
+      // This tells react hok form about the reordering so it knows this form field moves to a new position
+      move(oldIndex, newIndex);
+
+      // This tells dnd-kit about the change
+      return arrayMove(fields, oldIndex, newIndex);
+    }
+  }
 
   return (
     <div className="max-w-xl mx-auto space-y-6">
@@ -60,14 +103,27 @@ export default function WorkExperienceForm({
       </div>
       <Form {...form}>
         <form className="space-y-3">
-          {fields.map((field, index) => (
-            <WorkExperienceItem
-              key={field.id}
-              form={form}
-              index={index}
-              remove={remove}
-            />
-          ))}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis]}
+          >
+            <SortableContext
+              items={fields}
+              strategy={verticalListSortingStrategy}
+            >
+              {fields.map((field, index) => (
+                <WorkExperienceItem
+                  id={field.id}
+                  key={field.id}
+                  form={form}
+                  index={index}
+                  remove={remove}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
           <div className="flex justify-center">
             <Button
               type="button"
@@ -91,17 +147,44 @@ export default function WorkExperienceForm({
 }
 
 interface WorkExperienceProps {
+  id: string;
   form: UseFormReturn<WorkExperienceValues>;
   index: number;
   remove: (index: number) => void;
 }
 
-function WorkExperienceItem({ form, index, remove }: WorkExperienceProps) {
+function WorkExperienceItem({ form, index, remove, id }: WorkExperienceProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
   return (
-    <div className="space-y-3 border rounded-md bg-background p-3">
+    <div
+      className={cn(
+        "space-y-3 border rounded-md bg-background p-3",
+        isDragging && "shadow-lg z-50 cursor-grab relative"
+      )}
+      // To move the entire div
+      ref={setNodeRef}
+      style={{
+        // To add animation while dragging
+        transform: CSS.Transform.toString(transform),
+        transition,
+      }}
+    >
       <div className="flex justify-between gap-2">
         <span className="font-semibold">Work Experience {index + 1}</span>
-        <GripHorizontal className="size-5 cursor-grab text-muted-foreground" />
+        <GripHorizontal
+          className="size-5 cursor-grab text-muted-foreground focus:outline-none"
+          // To drag and drop with this icon
+          {...attributes}
+          {...listeners}
+        />
       </div>
       <FormField
         control={form.control}

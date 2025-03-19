@@ -106,8 +106,8 @@ export default function WorkExperienceForm({
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
             modifiers={[restrictToVerticalAxis]}
+            onDragEnd={handleDragEnd}
           >
             <SortableContext
               items={fields}
@@ -169,7 +169,7 @@ function WorkExperienceItem({ form, index, remove, id }: WorkExperienceProps) {
         "space-y-3 border rounded-md bg-background p-3",
         isDragging && "shadow-lg z-50 cursor-grab relative"
       )}
-      // To move the entire div
+      // To move this entire div
       ref={setNodeRef}
       style={{
         // To add animation while dragging

@@ -6,7 +6,7 @@ interface LoadingButtonProps extends ButtonProps {
   loading: boolean;
 }
 
-export default function LoadingBtn({
+export default function CustomBtn({
   loading,
   disabled,
   className,

@@ -25,7 +25,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import LoadingBtn from "../reusables/LoadingBtn";
+import CustomBtn from "../reusables/CustomBtn";
 
 interface ResumeItemProps {
   resume: ResumeServerData;
@@ -143,13 +143,13 @@ function DeleteConfirmation({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <LoadingBtn
+          <CustomBtn
             variant="destructive"
             loading={isPending}
             onClick={handleDelete}
           >
             Delete
-          </LoadingBtn>
+          </CustomBtn>
           <Button variant="secondary" onClick={() => openChange(false)}>
             Cancel
           </Button>

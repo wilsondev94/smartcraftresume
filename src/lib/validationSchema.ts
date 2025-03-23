@@ -24,7 +24,7 @@ export const personalInfoValidationSchema = z.object({
       "File must be an image"
     )
     .refine(
-      (file) => !file || file.size < 1024 * 1024 * 4,
+      (file) => !file || file.size <= 1024 * 1024 * 4,
       "File size must be less than 4MB"
     ),
   firstName: optionalString,
@@ -78,7 +78,7 @@ export type EducationValues = z.infer<typeof educationSchema>;
 ////////////////////////////////////////////////////////
 
 export const skillsSchema = z.object({
-  skills: z.array(z.string().trim().optional()).optional(),
+  skills: z.array(z.string().trim()).optional(),
 });
 
 export type SkillsValues = z.infer<typeof skillsSchema>;

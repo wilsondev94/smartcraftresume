@@ -1,20 +1,28 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { ResumeDataValidationSchema } from "@/lib/validationSchema";
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+
+import { cn, mapToResumeValues } from "@/lib/utils";
+import { ResumeDataValidationSchema } from "@/lib/validationSchema";
 import Breadcrumbs from "./Breadcrumbs";
 import Footer from "./Footer";
 import ResumePreviewSection from "./ResumePreviewSection";
 import { steps } from "./steps";
 import useAutoSave from "@/hooks/useAutoSave";
 import useUnloadWarning from "@/hooks/useUnloadWarning";
+import { ResumeServerData } from "@/lib/types";
 
-export default function ResumeEditor() {
+interface ResumeEditorProps {
+  resumeToEdit: ResumeServerData | null;
+}
+
+export default function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
   const searchPrarams = useSearchParams();
 
-  const [resumeData, setResumeData] = useState<ResumeDataValidationSchema>({});
+  const [resumeData, setResumeData] = useState<ResumeDataValidationSchema>(
+    resumeToEdit ? mapToResumeValues(resumeToEdit) : {}
+  );
 
   const [showResumePreview, setShowResumePreview] = useState(false);
 

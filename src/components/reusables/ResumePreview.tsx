@@ -11,11 +11,13 @@ import { borderStyles } from "../editor/BorderStyleBtn";
 interface ResumepreviewProps {
   resumeData: ResumeDataValidationSchema;
   className?: string;
+  contentRef?: React.Ref<HTMLDivElement>;
 }
 
 export default function ResumePreview({
   resumeData,
   className,
+  contentRef,
 }: ResumepreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +33,8 @@ export default function ResumePreview({
       )}
     >
       <div
+        ref={contentRef}
+        id="resumePreviewContent"
         style={{
           //  794px = 210mm (A4 paper width)
           zoom: (1 / 794) * width,

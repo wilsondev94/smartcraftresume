@@ -58,6 +58,11 @@ export const workExperienceSchema = z.object({
 
 export type WorkExperienceValues = z.infer<typeof workExperienceSchema>;
 
+// A type to access a work experience in the work experiences array
+// export type WorkExperience = NonNullable<
+//   z.infer<typeof workExperienceSchema>["workExperiences"]
+// >[number];
+
 ////////////////////////////////////////////////////////
 
 export const educationSchema = z.object({

@@ -1,7 +1,7 @@
 import { SubOptions } from "./subscription";
 
 export function canCreateResume(
-  SubLevel: SubOptions,
+  userSubLevel: SubOptions,
   currentResumeCount: number
 ) {
   const maxResumeMap: Record<SubOptions, number> = {
@@ -10,23 +10,23 @@ export function canCreateResume(
     premium_plus: Infinity,
   };
 
-  // if (SubLevel === "free") {
+  // if (userSubLevel === "free") {
   //   return currentResumeCount < maxResumeMap.free;
-  // } else if (SubLevel === "premium") {
+  // } else if (userSubLevel === "premium") {
   //   return currentResumeCount < maxResumeMap.premium;
   // } else {
   //   return currentResumeCount < maxResumeMap.premium_plus;
   // }
 
-  const maxResumes = maxResumeMap[SubLevel];
+  const maxResumes = maxResumeMap[userSubLevel];
 
   return currentResumeCount < maxResumes;
 }
 
-export function canUseAiTool(SubLevel: SubOptions) {
-  return SubLevel !== "free";
+export function canUseCutomizations(userSubLevel: SubOptions) {
+  return userSubLevel === "premium_plus";
 }
 
-export function canUseCutomizations(SubLevel: SubOptions) {
-  return SubLevel === "premium_plus";
+export function canUseAiTool(userSubLevel: SubOptions) {
+  return userSubLevel !== "free";
 }

@@ -17,7 +17,7 @@ export default async function page() {
     throw new Error("Unauthorized");
   }
 
-  const [resumes, totalCount, subLevel] = await Promise.all([
+  const [resumes, totalCount, userSubLevel] = await Promise.all([
     prisma.resume.findMany({
       where: {
         userId,
@@ -37,7 +37,7 @@ export default async function page() {
 
   return (
     <main className="max-w-7xl mx-auto p-3 w-full px-3 py-6 space-y-6">
-      <CreateResumeBtn canCreate={canCreateResume(subLevel, totalCount)} />
+      <CreateResumeBtn canCreate={canCreateResume(userSubLevel, totalCount)} />
       <div className="space-y-1">
         <h1 className="text-3xl font-bold">Your Resumes</h1>
         <p>Total: {totalCount}</p>

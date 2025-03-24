@@ -13,7 +13,7 @@ import { revalidatePath } from "next/cache";
 import stripe from "./stripe";
 import { env } from "@/env";
 import { getUserSubLevel } from "./subscription";
-import { canCreateResume } from "./permission";
+import { canCreateResume, canUseCutomizations } from "./permission";
 
 export async function saveResume(values: ResumeDataValidationSchema) {
   const { id } = values;
@@ -27,12 +27,12 @@ export async function saveResume(values: ResumeDataValidationSchema) {
   }
 
   //   Check resume count for non-premium users
-  const subLevel = await getUserSubLevel(userId);
+  const userSubLevel = await getUserSubLevel(userId);
 
   if (!id) {
     const resumeCount = await prisma.resume.count({ where: { userId } });
 
-    if (!canCreateResume(subLevel, resumeCount))
+    if (!canCreateResume(userSubLevel, resumeCount))
       throw new Error(
         "Maximum resume count reached for this subscription level."
       );
@@ -46,6 +46,16 @@ export async function saveResume(values: ResumeDataValidationSchema) {
 
   if (id && !existingResume) {
     throw new Error("Resume not found");
+  }
+
+  const hasCustomization =
+    (ResumeDataValidationSchema.borderStyle &&
+      ResumeDataValidationSchema.borderStyle !== existingResume?.borderStyle) ||
+    (ResumeDataValidationSchema.colorHex &&
+      ResumeDataValidationSchema.colorHex !== existingResume?.colorHex);
+
+  if (hasCustomization && !canUseCutomizations(userSubLevel)) {
+    throw new Error("Customization not allowed.");
   }
 
   let newPhotoUrl: string | undefined | null = undefined;

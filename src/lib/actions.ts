@@ -12,6 +12,8 @@ import {
 import { revalidatePath } from "next/cache";
 import stripe from "./stripe";
 import { env } from "@/env";
+import { getUserSubLevel } from "./subscription";
+import { canCreateResume } from "./permission";
 
 export async function saveResume(values: ResumeDataValidationSchema) {
   const { id } = values;
@@ -25,6 +27,16 @@ export async function saveResume(values: ResumeDataValidationSchema) {
   }
 
   //   Check resume count for non-premium users
+  const subLevel = await getUserSubLevel(userId);
+
+  if (!id) {
+    const resumeCount = await prisma.resume.count({ where: { userId } });
+
+    if (!canCreateResume(subLevel, resumeCount))
+      throw new Error(
+        "Maximum resume count reached for this subscription level."
+      );
+  }
 
   const existingResume = id
     ? await prisma.resume.findUnique({

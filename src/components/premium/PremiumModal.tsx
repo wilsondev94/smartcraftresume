@@ -38,34 +38,41 @@ export default function PremiumModal() {
     >
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Resume Builder Premium</DialogTitle>
+          <DialogTitle className="text-center">
+            Smartcraft Resume Premium
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-6">
-          <p>Unlock more features with premium subscription</p>
+          <p className="text-center">
+            Unlock more features with premium subscription
+          </p>
           <div className="flex">
             <div className="flex w-1/2 flex-col space-y-5">
-              <h3 className="text-center text-lg font-bold">Premium</h3>
-              <ul className="space-y-2">
-                {premiumFeatures.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2">
-                    <Check className="size-4 text-blue-500" /> {feature}
-                  </li>
-                ))}
-              </ul>
-              <Button
-                variant="outline"
-                onClick={() =>
-                  handlePremium(env.NEXT_PUBLIC_PREMIUM_STRIPE_PRICE_ID!)
-                }
-                disabled={isLoading}
-              >
-                Get Premium
-              </Button>
+              <h3 className="px-6 text-lg font-bold">Premium</h3>
+              <div className="flex flex-col gap-12">
+                <ul className="space-y-2">
+                  {premiumFeatures.map((feature) => (
+                    <li key={feature} className="flex items-center gap-2">
+                      <Check className="size-4 text-blue-500" /> {feature}
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    handlePremium(env.NEXT_PUBLIC_PREMIUM_STRIPE_PRICE_ID!)
+                  }
+                  disabled={isLoading}
+                  className="justify-self-end"
+                >
+                  Get Premium
+                </Button>
+              </div>
             </div>
             <div className="border-l mx-6" />
             <div className="flex w-1/2 flex-col space-y-5">
               {" "}
-              <h3 className="text-center text-lg font-bold bg-gradient-to-r from-[#2C5AA0] to-[#6C8EBF] bg-clip-text text-transparent">
+              <h3 className="px-6 text-lg font-bold bg-gradient-to-r from-[#2C5AA0] to-[#6C8EBF] bg-clip-text text-transparent">
                 Premium Plus
               </h3>
               <ul className="space-y-2">

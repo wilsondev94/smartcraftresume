@@ -54,7 +54,7 @@ endDate     DateTime?
 description String?
 
 resumeId String
-resume   Resume @relation(fields: [resumeId],references: [id])
+resume   Resume @relation(fields: [resumeId],references: [id],onDelete: Cascade)
 
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt
@@ -70,11 +70,27 @@ school    String?
 startDate DateTime?
 endDate   DateTime?
 
-resumeId String
-resume Resume @relation(fields: [resumeId],references: [id])
+resumeId  String
+resume Resume @relation(fields: [resumeId],references: [id],onDelete: Cascade)
 
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt
 
 @@map("educations")
+}
+
+model UserSubscription {
+id        String   @id @default(cuid())
+userId    String
+stripeCustomerId        String @unique
+stripeSubscriptionId    String @unique
+stripePriceId           String
+stripeCurrentPeriodEnd  DateTime
+stripeCancelAtPeriodEnd Boolean  @default(false)
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+
+@@map("user_subscriptions")
+
 }

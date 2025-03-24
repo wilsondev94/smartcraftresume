@@ -51,3 +51,6 @@ export function mapToResumeValues(
     colorHex: data.colorHex,
   };
 }
+
+export const premiumFeatures = ["AI Tools", "Up to 3 Resumes"];
+export const premiumPlusFeatures = ["Infinite Resumes", "Design Customization"];

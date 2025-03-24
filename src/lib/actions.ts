@@ -11,6 +11,7 @@ import {
 } from "./validationSchema";
 import { revalidatePath } from "next/cache";
 import stripe from "./stripe";
+import { env } from "@/env";
 
 export async function saveResume(values: ResumeDataValidationSchema) {
   const { id } = values;
@@ -146,8 +147,8 @@ export async function createCheckout(priceId: string) {
       },
     ],
     mode: "subscription",
-    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/billing/success`,
-    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/billing`,
+    success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
+    cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
     customer_email: user.emailAddresses[0].emailAddress,
     subscription_data: {
       metadata: {
@@ -156,7 +157,7 @@ export async function createCheckout(priceId: string) {
     },
     custom_text: {
       terms_of_service_acceptance: {
-        message: `I have read Smartcraft Resume's [terms of service](${process.env.NEXT_PUBLIC_BASE_URL}/tos) and I have agreed with them`,
+        message: `I have read Smartcraft Resume's [terms of service](${env.NEXT_PUBLIC_BASE_URL}/tos) and I have agreed with them`,
       },
     },
     consent_collection: {

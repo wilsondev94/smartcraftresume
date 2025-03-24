@@ -8,6 +8,7 @@ import usePremiumModal from "@/hooks/usePremiumModal";
 import { useState } from "react";
 import { toast } from "sonner";
 import { createCheckout } from "@/lib/actions";
+import { env } from "@/env";
 
 export default function PremiumModal() {
   const { open, setOpen } = usePremiumModal();
@@ -54,9 +55,7 @@ export default function PremiumModal() {
               <Button
                 variant="outline"
                 onClick={() =>
-                  handlePremium(
-                    process.env.NEXT_PUBLIC_PREMIUM_STRIPE_PRICE_ID!
-                  )
+                  handlePremium(env.NEXT_PUBLIC_PREMIUM_STRIPE_PRICE_ID!)
                 }
                 disabled={isLoading}
               >
@@ -79,9 +78,7 @@ export default function PremiumModal() {
               <Button
                 variant="premium"
                 onClick={() =>
-                  handlePremium(
-                    process.env.NEXT_PUBLIC_PREMIUM_PLUS_STRIPE_PRICE_ID!
-                  )
+                  handlePremium(env.NEXT_PUBLIC_PREMIUM_PLUS_STRIPE_PRICE_ID!)
                 }
                 disabled={isLoading}
               >

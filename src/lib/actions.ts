@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { del, put } from "@vercel/blob";
 import prisma from "./prisma";
 
@@ -10,6 +10,7 @@ import {
   resumeValidationSchema,
 } from "./validationSchema";
 import { revalidatePath } from "next/cache";
+import stripe from "./stripe";
 
 export async function saveResume(values: ResumeDataValidationSchema) {
   const { id } = values;
@@ -129,4 +130,41 @@ export async function deleteResume(id: string) {
   });
 
   revalidatePath("/resumes");
+}
+
+export async function createCheckout(priceId: string) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error("Unauthorized user");
+  }
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price: priceId,
+        quantity: 1,
+      },
+    ],
+    mode: "subscription",
+    success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/billing/success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/billing`,
+    customer_email: user.emailAddresses[0].emailAddress,
+    subscription_data: {
+      metadata: {
+        userId: user.id,
+      },
+    },
+    custom_text: {
+      terms_of_service_acceptance: {
+        message: `I have read Smartcraft Resume's [terms of service](${process.env.NEXT_PUBLIC_BASE_URL}/tos) and I have agreed with them`,
+      },
+    },
+    consent_collection: {
+      terms_of_service: "required",
+    },
+  });
+
+  if (!session.url) throw new Error("Failed to create checkout.");
+
+  return session.url;
 }

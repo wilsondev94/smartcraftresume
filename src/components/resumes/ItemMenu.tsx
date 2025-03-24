@@ -86,7 +86,7 @@ function DeleteConfirmation({
         await deleteResume(resumeId);
       } catch (error) {
         console.log(error);
-        toast("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again.");
       }
     });
   }

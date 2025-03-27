@@ -8,7 +8,9 @@ export type SubOptions = "free" | "premium" | "premium_plus";
 export const getUserSubLevel = cache(
   async (userId: string): Promise<SubOptions> => {
     const subscription = await prisma.userSubscription.findUnique({
-      where: { id: userId },
+      where: {
+        userId,
+      },
     });
 
     if (!subscription || subscription.stripeCurrentPeriodEnd < new Date()) {

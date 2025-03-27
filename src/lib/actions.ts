@@ -161,6 +161,10 @@ export async function createCheckout(priceId: string) {
     throw new Error("Unauthorized user");
   }
 
+  const stripeCustomerId = user.privateMetadata.stripeCustomerId as
+    | string
+    | undefined;
+
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
@@ -171,7 +175,13 @@ export async function createCheckout(priceId: string) {
     mode: "subscription",
     success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
     cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
-    customer_email: user.emailAddresses[0].emailAddress,
+    customer: stripeCustomerId,
+    customer_email: stripeCustomerId
+      ? undefined
+      : user.emailAddresses[0].emailAddress,
+    metadata: {
+      userId: user.id,
+    },
     subscription_data: {
       metadata: {
         userId: user.id,
@@ -188,6 +198,27 @@ export async function createCheckout(priceId: string) {
   });
 
   if (!session.url) throw new Error("Failed to create checkout.");
+
+  return session.url;
+}
+
+export async function createCustomerPortal() {
+  const user = await currentUser();
+
+  if (!user) throw new Error("Unauthorize user");
+
+  const stripeCustomerId = user.privateMetadata.stripeCustomerId as
+    | string
+    | undefined;
+
+  if (!stripeCustomerId) throw new Error("Missing stripe cutomer id");
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: stripeCustomerId,
+    return_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
+  });
+
+  if (!session) throw new Error("Fail to create customer portal");
 
   return session.url;
 }

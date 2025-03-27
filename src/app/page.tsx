@@ -23,7 +23,7 @@ export default function page() {
           Swiftly
         </h1>
         <p className="text-lg text-gray-500">
-          Design a perfect resume with our resume builder.
+          Design a perfect resume with Smartcraft Resume.
         </p>
         <Button asChild size="lg" variant="premium">
           <Link href="/resumes">Get started</Link>

@@ -49,7 +49,7 @@ export default function PremiumModal() {
           <div className="flex">
             <div className="flex w-1/2 flex-col space-y-5">
               <h3 className="px-6 text-lg font-bold">Premium</h3>
-              <div className="flex flex-col gap-12">
+              <div className="flex flex-col gap-[3.3rem]">
                 <ul className="space-y-2">
                   {premiumFeatures.map((feature) => (
                     <li key={feature} className="flex items-center gap-2">

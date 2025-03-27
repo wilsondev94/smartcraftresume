@@ -15,6 +15,7 @@ export default async function layout({
   if (!userId) redirect("/sign-in");
 
   const userSubLevel = await getUserSubLevel(userId);
+  console.log(userSubLevel);
 
   return (
     <SubLevelProvider userSubLevel={userSubLevel}>

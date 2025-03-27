@@ -1,7 +1,7 @@
 import { Metadata } from "next";
+import { auth } from "@clerk/nextjs/server";
 
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 import stripe from "@/lib/stripe";
 import Stripe from "stripe";
 import SubscribeBtn from "@/components/billing/SubscribeBtn";

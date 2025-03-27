@@ -19,9 +19,6 @@ export async function POST(req: NextRequest) {
       env.STRIPE_WEBHOOK_SECRET_KEY
     );
 
-    console.log("EVENTSS::", event.type);
-    console.log("EVENTSS::", event.data.object);
-
     // Handle the event
     switch (event.type) {
       case "checkout.session.completed":

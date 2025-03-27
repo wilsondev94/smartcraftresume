@@ -218,7 +218,7 @@ export async function createCustomerPortal() {
     return_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
   });
 
-  if (!session) throw new Error("Fail to create customer portal");
+  if (!session.url) throw new Error("Fail to create customer portal");
 
   return session.url;
 }

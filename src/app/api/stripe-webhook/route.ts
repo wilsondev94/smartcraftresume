@@ -47,7 +47,9 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   const userId = session.metadata?.userId;
   if (!userId) throw new Error("Missing user id in session");
 
-  (await clerkClient()).users.updateUserMetadata(userId, {
+  await (
+    await clerkClient()
+  ).users.updateUserMetadata(userId, {
     privateMetadata: { stripeCustomerId: session.customer as string },
   });
 }

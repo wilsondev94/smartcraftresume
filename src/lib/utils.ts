@@ -52,5 +52,5 @@ export function mapToResumeValues(
   };
 }
 
-export const premiumFeatures = ["Up to 3 Resumes"];
+export const premiumFeatures = ["Up to 4 Resumes"];
 export const premiumPlusFeatures = ["Infinite Resumes", "Design Customization"];

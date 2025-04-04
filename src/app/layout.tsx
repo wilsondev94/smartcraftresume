@@ -12,8 +12,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s - Smart Craft Resume",
-    absolute: "Smart Craft Resume",
+    template: "%s - Smartcraft Resume",
+    absolute: "Smartcraft Resume",
   },
   description: "",
 };
